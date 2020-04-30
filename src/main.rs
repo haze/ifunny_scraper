@@ -68,7 +68,6 @@ async fn archive_user(opts: ScrapeOpt) -> Result<()> {
         opts.page_scrape_delay_ms,
     )
     .await?;
-    println!();
     let link_count = media_links.len();
     let elapsed = before.elapsed();
     quick_save_links(media_links.as_slice(), dl_folder.join("links.txt")).await?;
@@ -192,6 +191,7 @@ async fn get_links(
             .text()
             .await?;
         if html.is_empty() {
+            println!();
             return Err(Box::new(ScrapeError::RateLimited));
         }
         // std::fs::write("latest.html", &html)?;
@@ -214,6 +214,7 @@ async fn get_links(
                                 if seen_cache.contains(&owned) {
                                     duplicate_hits += 1;
                                     if duplicate_hits >= 2 {
+                                        println!();
                                         return Ok(links);
                                     }
                                 } else {
@@ -228,6 +229,7 @@ async fn get_links(
                                             if seen_cache.contains(&owned) {
                                                 duplicate_hits += 1;
                                                 if duplicate_hits >= 2 {
+                                                    println!();
                                                     return Ok(links);
                                                 }
                                             } else {
@@ -246,5 +248,7 @@ async fn get_links(
             }
         }
     }
+
+    println!();
     Ok(links)
 }
